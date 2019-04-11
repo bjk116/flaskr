@@ -20,7 +20,19 @@
         {% endif %}
       </header>
       <p class="body">{{ post['body'] }}</p>
+      <p class="likeCountOnPost">{{ post['likes'] }} Likes</p>
     </article>
+    {% if g.user%}
+      {% if post['personallyLiked']>=1 %}
+         <form action="{{ url_for('blog.like', id=post['id']) }}" method="post">
+            <input class="likeBtn" type="submit" value="Unlike Post">
+        </form>
+      {% else %}
+      <form action="{{ url_for('blog.like', id=post['id']) }}" method="post">
+        <input class="likeBtn" type="submit" value="Like Post">
+      </form>
+      {% endif %}
+    {% endif %}
     {% if not loop.last %}
       <hr>
     {% endif %}

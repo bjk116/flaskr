@@ -19,7 +19,7 @@ def index():
     print("user: "+str(userId))
 
     posts = db.execute(
-        'SELECT p.id, title, body, created, author_id, username, SUM(l.postId=p.id) as likes, SUM(l.userId=?) as personallyLiked'
+        'SELECT p.id, title, body, created, author_id, username, IFNULL(SUM(l.postId=p.id),0) as likes, IFNULL(SUM(l.userId=?),0) as personallyLiked'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' LEFT JOIN likedPosts l ON l.postId = p.id'
         ' GROUP BY p.id'

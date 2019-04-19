@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h3>{{user.username}}</h3>
+	<hr>
+	{% for comment in comments %}
+		<h4><a class="action" href="{{ url_for('blog.view', id=comment.postId) }}">{{comment.title}}</a> at {{comment.createdAt}}</h4>
+		<h5>{{comment.commentContent}}</h5>
+	{% endfor %}
+{% endblock %}

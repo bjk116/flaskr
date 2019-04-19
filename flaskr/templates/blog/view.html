@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <article class="post">
+      <header>
+        <div>
+          <a class="article-title" href="{{ url_for('blog.view', id=post['id']) }}"
+            <h1>{{ post['title'] }}</h1>
+          </a>
+          <div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
+        </div>
+        {% if g.user['id'] == post['author_id'] %}
+          <a class="action" href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
+        {% endif %}
+      </header>
+      <p class="body">{{ post['body'] }}</p>
+      <p class="likeCountOnPost">{{ post['likes'] }} Likes</p>
+    </article>
+    {% if g.user%}
+      {% if post['personallyLiked']>=1 %}
+         <form action="{{ url_for('blog.like', id=post['id'], redirectHere=True) }}" method="post">
+            <input class="likeBtn" type="submit" value="Unlike Post">
+        </form>
+      {% else %}
+        <form action="{{ url_for('blog.like', id=post['id'], redirectHere=True) }}" method="post">
+          <input class="likeBtn" type="submit" value="Like Post">
+        </form>
+      {% endif %}
+      <hr>
+      <!--Comment Area-->
+      <button class="btn addNewComment parentComment-None">Add new comment</button>
+    {% endif %}
+    <hr>
+    <ul>
+      {%- for comment in comments recursive %}
+        <li>
+            {{ comment.commentContent }}
+            <br>
+
+            <button type="button" class="btn" data-toggle="collapse" data-target="#demo{{ comment.id }}">Reply</button>
+             <div id="demo{{ comment.id }}" class="collapse">
+
+                  <form action="{{ url_for('blog.addComment', postId=post['id'], redirectHere=True, parentComment=comment['id'])}}" method="post">
+                      <textarea name="comment"></textarea>
+                      <input type="submit">
+                  </form>
+          </div>
+            {%- if comment.children_comments -%}
+                <ul>{{ loop(comment.children_comments) }}</ul>
+            {%- endif %}
+        </li>
+      {%- endfor %}
+    </ul>
+    <!--{%  for comment in comments %}
+      {% if comment['commentParentId'] == -1 %}
+        <h4><u>{{ comment['username'] }} on {{comment['createdAt']}}</u></h4>
+        <h5>{{ comment['commentContent'] }}</h5>
+        <form action="{{ url_for('blog.addComment', postId=post['id'], redirectHere=True, parentComment=comment['id'])}}" method="post">
+          <textarea name="comment"></textarea>
+          <input type="submit">
+        </form>
+        {% for comment_level_2 in comments %}
+          {% if comment_level_2['commentParentId'] == comment['id'] %}
+            <h4>Reply to {{comment['username']}}</h4>
+            <h4><u>{{ comment_level_2['username'] }} on {{comment_level_2['createdAt']}}</u></h4>
+              <h5>{{ comment_level_2['commentContent'] }}</h5>
+              <form action="{{ url_for('blog.addComment', postId=post['id'], redirectHere=True, parentComment=comment['id'])}}" method="post">
+                <textarea name="comment"></textarea>
+                <input type="submit">
+              </form>
+          {% endif %}
+        {% endfor%}
+        {% if not loop.last %}
+         <hr>
+        {% endif %}
+      {% endif %}
+    {% endfor %}-->
+
+{% endblock %}

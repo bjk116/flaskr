@@ -12,7 +12,9 @@
     <article class="post">
       <header>
         <div>
-          <h1>{{ post['title'] }}</h1>
+          <a class="article-title" href="{{ url_for('blog.view', id=post['id']) }}"
+            <h1>{{ post['title'] }}</h1>
+          </a>
           <div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
         </div>
         {% if g.user['id'] == post['author_id'] %}
@@ -25,11 +27,11 @@
     {% if g.user%}
       {% if post['personallyLiked']>=1 %}
          <form action="{{ url_for('blog.like', id=post['id']) }}" method="post">
-            <input class="likeBtn" type="submit" value="Unlike Post">
+            <button class="likeBtn" type="submit" value="Unlike Post">Unlike Post</button>
         </form>
       {% else %}
       <form action="{{ url_for('blog.like', id=post['id']) }}" method="post">
-        <input class="likeBtn" type="submit" value="Like Post">
+        <button class="likeBtn" type="submit" value="Like Post">Like Post</button>
       </form>
       {% endif %}
     {% endif %}
